@@ -1,0 +1,44 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2018-05-01/subscriptionDeploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "RGQty":{
+            "type": "int",
+            "minValue": 1
+        },
+        "DeploymentLocation": {
+            "type": "string",
+            "allowedValues": [
+                "eastus",
+                "westus"                
+            ]
+        }
+    },
+    "functions": [],
+    "variables": {
+
+    },
+    "resources": [
+        {
+            "type": "Microsoft.Resources/resourceGroups",
+            "apiVersion": "2019-10-01",
+            "name": "Shared",
+            "location": "[parameters('DeploymentLocation')]"
+        },
+        {
+            "type": "Microsoft.Resources/resourceGroups",
+            "apiVersion": "2019-10-01",
+            "name": "[concat('Spoke',copyIndex(1))]",
+            "location": "[parameters('DeploymentLocation')]",
+            "dependsOn":[
+                "Shared"
+            ],
+            "copy": {
+                "name":"SpokeRGLoop",
+                "mode": "Parallel",
+                "count": "[parameters('RGQty')]"
+            }
+         }        
+    ],
+    "outputs": {}
+}
