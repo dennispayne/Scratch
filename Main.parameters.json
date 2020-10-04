@@ -7,6 +7,9 @@
         },
         "DeploymentLocation": {
             "value":"eastus"
+        },
+        "TemplateLocation": {
+            "value": "https://raw.githubusercontent.com/dennispayne/Scratch/master/"
         }
     }
 }

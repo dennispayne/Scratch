@@ -12,6 +12,12 @@
                 "eastus",
                 "westus"                
             ]
+        },
+        "TemplateLocation": {
+            "type": "string",
+            "metadata": {
+                "description": "Globally available uri where templates are stored. MUST END IN '/'!!!  i.e. https://raw.githubusercontent.com/repo/branch/"
+            }
         }
     },
     "functions": [],
@@ -47,12 +53,31 @@
             "properties": {
                 "mode": "Incremental",
                 "templateLink": {
-                    "uri": "https://raw.githubusercontent.com/dennispayne/Scratch/master/hub.json"
+                    "uri": "[concat( parameters('TemplateLocation') , 'hub.json' )]"
                 },
                 "parameters": {
                 }
             }
-        }        
+        },
+        {
+            "name": "DeploySpoke",
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "2019-10-01",
+            "resourceGroup": "[concat('Spoke',copyIndex(1))]",
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[concat( parameters('TemplateLocation') , 'spoke.json' )]"
+                },
+                "parameters": {
+                }
+            },
+            "copy": {
+                "name":"SpokeTemplateLoop",
+                "mode": "Parallel",
+                "count": "[parameters('SpokeCount')]"
+            }
+        }           
     ],
     "outputs": {}
 }
