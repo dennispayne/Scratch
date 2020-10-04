@@ -38,7 +38,21 @@
                 "mode": "Parallel",
                 "count": "[parameters('RGQty')]"
             }
-         }        
+         },
+        {
+            "name": "DeploySharedServices",
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "2019-10-01",
+            "resourceGroup": "Shared",
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "https://raw.githubusercontent.com/dennispayne/Scratch/master/SharedServices.json"
+                },
+                "parameters": {
+                }
+            }
+        }        
     ],
     "outputs": {}
 }
