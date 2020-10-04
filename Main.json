@@ -16,7 +16,7 @@
         "TemplateLocation": {
             "type": "string",
             "metadata": {
-                "description": "Globally available uri where templates are stored. MUST END IN '/'!!!  i.e. https://raw.githubusercontent.com/repo/branch/"
+                "description": "Globally available uri where templates are stored. ***MUST END IN '/'***  i.e. https://raw.githubusercontent.com/repo/branch/"
             }
         }
     },
