@@ -8,7 +8,7 @@
         "SpokeCIDR": "[concat('10.',variables('ThisSpokeNumber'),'.0.0/24')]"
     },
     "resources": [
-        {   "name": "[concat(resourcegroup().name,'Vnet')]",
+        {   "name": "[concat(resourcegroup().name,'-Vnet')]",
             "comments": "Vnet used by this Spoke",
             "type": "Microsoft.Network/virtualNetworks",
             "apiVersion": "2019-11-01",
@@ -21,7 +21,7 @@
                 },
                 "subnets": [
                     {
-                        "name": "[concat(resourcegroup().name,'Subnet1')]",
+                        "name": "[concat(resourcegroup().name,'-Subnet1')]",
                         "properties": {
                             "addressPrefix": "[variables('SpokeCIDR')]"
                         }
