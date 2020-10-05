@@ -4,6 +4,32 @@
     "parameters": {},
     "functions": [],
     "variables": {},
-    "resources": [],
+    "resources": [
+        {   "name": "[concat(resourcegroup().name,'Vnet')]",
+            "comments": "Main peering point for all other vnets deployed by main.json",
+            "type": "Microsoft.Network/virtualNetworks",
+            "apiVersion": "2019-11-01",
+            "location": "[resourceGroup().location]",
+            "tags": {
+                "displayName": "[concat(resourcegroup().name,'Vnet')]"
+            },
+            "properties": {
+                "addressSpace": {
+                    "addressPrefixes": [
+                        "10.0.0.0/24"
+                    ]
+                },
+                "subnets": [
+                    {
+                        "name": "[concat(resourcegroup().name,'Subnet1')]",
+                        "properties": {
+                            "addressPrefix": "10.0.0.0/24"
+                        }
+                    }
+                    
+                ]
+            }
+        }
+    ],
     "outputs": {}
 }
