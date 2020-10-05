@@ -51,6 +51,40 @@
                 }
 
             ]
+        },
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "2019-10-01",
+            "name": "HubToSpokePeeringDeployment",
+            "resourceGroup": "WVD-Hub",
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/virtualNetworks', concat(resourcegroup().name,'-Vnet'))]"
+            ],
+            "properties": {
+                "mode": "Incremental",
+                "template": {
+                    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+                    "contentVersion": "1.0.0.0",
+                    "resources":[
+                        {
+                            "type": "Microsoft.Network/virtualNetworks/VirtualNetworkPeerings",
+                            "apiVersion": "2019-11-01",
+                            "name": "[concat(resourcegroup().name,'-Vnet-to-WVD-Spoke',variables('ThisSpokeNumber'),'-Vnet-Peering')]",
+                            "location": "[resourceGroup().location]",
+                            "comments": "This is the peering from Hub to Spoke",
+                            "properties": {
+                                "allowVirtualNetworkAccess": true,
+                                "allowForwardedTraffic": false,
+                                "allowGatewayTransit": false,
+                                "useRemoteGateways": false,
+                                "remoteVirtualNetwork": {
+                                    "id": "[resourceId(concat('WVD-Spoke-',variables('ThisSpokeNumber')),'Microsoft.Network/virtualNetworks',concat('WVD-Spoke-',variables('ThisSpokeNumber'),'-Vnet'))]"
+                                }
+                    }
+                        }
+                    ]
+                }
+            }
         }
         
     ],
