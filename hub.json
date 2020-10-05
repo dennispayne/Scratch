@@ -39,7 +39,7 @@
                 }
             },
             "dependsOn": [
-                "[resourceId('Microsoft.Resources/resourceGroups','Hub')]"
+
             ],
             "resources": [
                 {
@@ -79,7 +79,7 @@
                 ]
             },
             "dependsOn": [
-                "[resourceId('Microsoft.Resources/resourceGroups','Hub')]"
+
             ]
         }
     ],
