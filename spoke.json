@@ -16,18 +16,33 @@
             "properties": {
                 "addressSpace": {
                     "addressPrefixes": [
-                        "10.0.0.0/24"
+                        "10.1.0.0/24"
                     ]
                 },
                 "subnets": [
                     {
                         "name": "[concat(resourcegroup().name,'Subnet1')]",
                         "properties": {
-                            "addressPrefix": "10.0.0.0/24"
+                            "addressPrefix": "10.1.0.0/24"
                         }
                     }
                     
                 ]
+            }
+        },
+        {
+            "type": "Microsoft.Network/virtualNetworks/virtualNetworkPeerings",
+            "apiVersion": "2019-11-01",
+            "name": "[concat(resourcegroup().name,'-HubPeering')]",
+            "location": "[resourceGroup().location]",
+            "properties": {
+                "allowVirtualNetworkAccess": true,
+                "allowForwardedTraffic": false,
+                "allowGatewayTransit": false,
+                "useRemoteGateways": false,
+                "remoteVirtualNetwork": {
+                    "id": "HubVnet"
+                }
             }
         }
     ],
