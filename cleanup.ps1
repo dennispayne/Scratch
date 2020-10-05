@@ -1,0 +1,1 @@
+Get-AzResourceGroup | Where-Object {$_.ResourceGroupName -like "Hub" -or $_.ResourceGroupName -like "Spoke-*"} | Remove-AzResourceGroup -Force

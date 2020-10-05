@@ -38,6 +38,9 @@
                     "family": "A"
                 }
             },
+            "dependsOn": [
+                "[resourceId('Microsoft.Resources/resourceGroups','Hub')]"
+            ],
             "resources": [
                 {
                     "type": "secrets",
@@ -73,9 +76,11 @@
                             "addressPrefix": "10.0.0.0/24"
                         }
                     }
-                    
                 ]
-            }
+            },
+            "dependsOn": [
+                "[resourceId('Microsoft.Resources/resourceGroups','Hub')]"
+            ]
         }
     ],
     "outputs": {}

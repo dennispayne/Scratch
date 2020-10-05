@@ -38,7 +38,7 @@
             "name": "[concat('Spoke-',copyIndex(1))]",
             "location": "[parameters('DeploymentLocation')]",
             "dependsOn":[
-                "Hub"
+                "[resourceId('Microsoft.Resources/resourceGroups','Hub')]"
             ],
             "copy": {
                 "name":"SpokeRGLoop",
@@ -60,6 +60,9 @@
                 "parameters": {
                 }
             },
+            "dependsOn":[
+                "[resourceId('Microsoft.Resources/resourceGroups','Hub')]"
+            ],
             "comments": "Linked deployment template containing all hub services. Executes once."
         },
         {
@@ -75,6 +78,9 @@
                 "parameters": {
                 }
             },
+            "dependsOn":[
+                "[resourceId('Microsoft.Resources/resourceGroups' , concat('Spoke-',copyIndex(1)))]"
+            ],
             "copy": {
                 "name":"SpokeTemplateLoop",
                 "mode": "Parallel",
