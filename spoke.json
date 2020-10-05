@@ -28,8 +28,32 @@
                     }
                     
                 ]
-            }
+            },
+            "resources": [
+                {
+                    "apiVersion": "2020-05-01",
+                    "type": "virtualNetworkPeerings",
+                    "name": "[concat(resourcegroup().name,'-Vnet-to-WVD-Hub-Vnet-Peering')]",
+                    "location": "[resourceGroup().location]",
+                    "dependsOn": [
+                        "[resourceId('Microsoft.Network/virtualNetworks/', concat(resourcegroup().name,'-Vnet'))]",
+                        "[resourceId('Microsoft.Network/virtualNetworks/', 'WVD-Hub-Vnet')]"
+                    ],
+                    "comments": "This is the peering from Spoke to Hub",
+                    "properties": {
+                        "allowVirtualNetworkAccess": true,
+                        "allowForwardedTraffic": false,
+                        "allowGatewayTransit": false,
+                        "useRemoteGateways": false,
+                        "remoteVirtualNetwork": {
+                            "id": "[resourceId('Microsoft.Network/virtualNetworks','WVD-Hub-Vnet')]"
+                        }
+                    }    
+                }
+
+            ]
         }
+        
     ],
     "outputs": {}
 }
