@@ -9,9 +9,6 @@
             "type": "Microsoft.KeyVault/vaults",
             "apiVersion": "2016-10-01",
             "location": "eastus",
-            "tags": {
-
-            },
             "properties": {
                 "enabledForDeployment": true,
                 "enabledForTemplateDeployment": true,
@@ -55,14 +52,11 @@
                 }
             ]
         },
-        {   "name": "HubVnet",
+        {   "name": "[concat(resourcegroup().name,'Vnet')]",
             "comments": "Main peering point for all other vnets deployed by main.json",
             "type": "Microsoft.Network/virtualNetworks",
             "apiVersion": "2019-11-01",
             "location": "[resourceGroup().location]",
-            "tags": {
-                
-            },
             "properties": {
                 "addressSpace": {
                     "addressPrefixes": [
@@ -71,7 +65,7 @@
                 },
                 "subnets": [
                     {
-                        "name": "HubSubnet1",
+                        "name": "[concat(resourcegroup().name,'Subnet1')]",
                         "properties": {
                             "addressPrefix": "10.0.0.0/24"
                         }

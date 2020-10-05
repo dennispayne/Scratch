@@ -28,17 +28,17 @@
         {
             "type": "Microsoft.Resources/resourceGroups",
             "apiVersion": "2019-10-01",
-            "name": "Hub",
+            "name": "WVD-Hub",
             "location": "[parameters('DeploymentLocation')]",
             "comments": "Hub Resource Group that will be the centralized services (vnet, profile storage, etc) for all other services deployed by this template"
         },
         {
             "type": "Microsoft.Resources/resourceGroups",
             "apiVersion": "2019-10-01",
-            "name": "[concat('Spoke-',copyIndex(1))]",
+            "name": "[concat('WVD-Spoke-',copyIndex(1))]",
             "location": "[parameters('DeploymentLocation')]",
             "dependsOn":[
-                "[resourceId('Microsoft.Resources/resourceGroups','Hub')]"
+                "[resourceId('Microsoft.Resources/resourceGroups','WVD-Hub')]"
             ],
             "copy": {
                 "name":"SpokeRGLoop",
@@ -51,7 +51,7 @@
             "name": "DeployHub",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "2019-10-01",
-            "resourceGroup": "Hub",
+            "resourceGroup": "WVD-Hub",
             "properties": {
                 "mode": "Incremental",
                 "templateLink": {
@@ -61,7 +61,7 @@
                 }
             },
             "dependsOn":[
-                "[resourceId('Microsoft.Resources/resourceGroups','Hub')]"
+                "[resourceId('Microsoft.Resources/resourceGroups','WVD-Hub')]"
             ],
             "comments": "Linked deployment template containing all hub services. Executes once."
         },
@@ -69,7 +69,7 @@
             "name": "DeploySpoke",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "2019-10-01",
-            "resourceGroup": "[concat('Spoke-',copyIndex(1))]",
+            "resourceGroup": "[concat('WVD-Spoke-',copyIndex(1))]",
             "properties": {
                 "mode": "Incremental",
                 "templateLink": {
@@ -79,7 +79,7 @@
                 }
             },
             "dependsOn":[
-                "[resourceId('Microsoft.Resources/resourceGroups' , concat('Spoke-',copyIndex(1)))]"
+                "[resourceId('Microsoft.Resources/resourceGroups' , concat('WVD-Spoke-',copyIndex(1)))]"
             ],
             "copy": {
                 "name":"SpokeTemplateLoop",
