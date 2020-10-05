@@ -66,7 +66,7 @@
             "name": "DeploySpoke",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "2019-10-01",
-            "resourceGroup": "[concat('Spoke',copyIndex(1))]",
+            "resourceGroup": "[concat('Spoke-',copyIndex(1))]",
             "properties": {
                 "mode": "Incremental",
                 "templateLink": {

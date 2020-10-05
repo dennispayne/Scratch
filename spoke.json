@@ -4,7 +4,7 @@
     "parameters": {},
     "functions": [],
     "variables": {
-        "SpokeCIDR": "[concat('10.',copyIndex(1),'.0.0/24')]"
+        "SpokeCIDR": "[concat('10.',split(resourceGroup().name,'-')[2],'.0.0/24')]"
     },
     "resources": [
         {   "name": "[concat(resourcegroup().name,'Vnet')]",
