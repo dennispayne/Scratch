@@ -29,7 +29,8 @@
             "type": "Microsoft.Resources/resourceGroups",
             "apiVersion": "2019-10-01",
             "name": "Hub",
-            "location": "[parameters('DeploymentLocation')]"
+            "location": "[parameters('DeploymentLocation')]",
+            "comments": "Hub Resource Group that will be the centralized services (vnet, profile storage, etc) for all other services deployed by this template"
         },
         {
             "type": "Microsoft.Resources/resourceGroups",
@@ -43,7 +44,8 @@
                 "name":"SpokeRGLoop",
                 "mode": "Parallel",
                 "count": "[parameters('SpokeCount')]"
-            }
+            },
+            "comments": "One or more Spoke Resource Groups that will contain vnets peered with the Hub, WVD session pools, etc."
          },
         {
             "name": "DeployHub",
@@ -57,7 +59,8 @@
                 },
                 "parameters": {
                 }
-            }
+            },
+            "comments": "Linked deployment template containing all hub services. Executes once."
         },
         {
             "name": "DeploySpoke",
@@ -76,7 +79,8 @@
                 "name":"SpokeTemplateLoop",
                 "mode": "Parallel",
                 "count": "[parameters('SpokeCount')]"
-            }
+            },
+            "comments": "Linked deployment template containing all spoke services. Executes once per Spoke RG"
         }           
     ],
     "outputs": {}

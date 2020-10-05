@@ -10,4 +10,6 @@ Deploys a WVD service based on a hub/spoke model
 - [ ] Add session pool to spokes
 - [ ] Add session hosts to session pools
 - [ ] Other related WVD specifics
+- [ ] Integrate with AAD DS
+- [ ] Integrate with [Virtual Desktop Optimization Tool](https://github.com/The-Virtual-Desktop-Team/Virtual-Desktop-Optimization-Tool)
 - [ ] ????
