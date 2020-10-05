@@ -37,7 +37,7 @@
                     "location": "[resourceGroup().location]",
                     "dependsOn": [
                         "[resourceId('Microsoft.Network/virtualNetworks/', concat(resourcegroup().name,'-Vnet'))]",
-                        "[resourceId('Microsoft.Network/virtualNetworks/', 'WVD-Hub-Vnet')]"
+                        "[reference('WVD-Hub-Vnet','2019-4-1')]"
                     ],
                     "comments": "This is the peering from Spoke to Hub",
                     "properties": {
@@ -46,7 +46,7 @@
                         "allowGatewayTransit": false,
                         "useRemoteGateways": false,
                         "remoteVirtualNetwork": {
-                            "id": "[resourceId('Microsoft.Network/virtualNetworks','WVD-Hub-Vnet')]"
+                            "id": "[reference('WVD-Hub-Vnet','2019-4-1')]"
                         }
                     }    
                 }
