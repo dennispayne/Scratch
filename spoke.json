@@ -4,7 +4,7 @@
     "parameters": {},
     "functions": [],
     "variables": {
-        "ThisSpokeNumber":"[split(resourceGroup().name,'-')[1]]",
+        "ThisSpokeNumber":"[split(resourceGroup().name,'-')[2]]",
         "SpokeCIDR": "[concat('10.',variables('ThisSpokeNumber'),'.0.0/24')]"
     },
     "resources": [
