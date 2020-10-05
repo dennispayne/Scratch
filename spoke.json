@@ -33,7 +33,7 @@
         {
             "type": "Microsoft.Network/virtualNetworks/virtualNetworkPeerings",
             "apiVersion": "2019-11-01",
-            "name": "[concat(resourcegroup().name,'-HubPeering')]",
+            "name": "[concat(resourcegroup().name,'-Hub-Peering')]",
             "location": "[resourceGroup().location]",
             "properties": {
                 "allowVirtualNetworkAccess": true,
@@ -43,7 +43,11 @@
                 "remoteVirtualNetwork": {
                     "id": "HubVnet"
                 }
-            }
+            },
+            "dependsOn": [
+                        "[resourceId('Microsoft.Network/virtualNetworks/', 'Hub')]",
+                        "[resourceId('Microsoft.Network/virtualNetworks/', concat(resourcegroup().name,'Vnet'))]"
+            ]
         }
     ],
     "outputs": {}
