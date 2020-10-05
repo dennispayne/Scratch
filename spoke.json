@@ -3,7 +3,9 @@
     "contentVersion": "1.0.0.0",
     "parameters": {},
     "functions": [],
-    "variables": {},
+    "variables": {
+        "SpokeCIDR": "[concat('10.',copyIndex(1),'.0.0/24')]"
+    },
     "resources": [
         {   "name": "[concat(resourcegroup().name,'Vnet')]",
             "comments": "Main peering point for all other vnets deployed by main.json",
@@ -16,14 +18,14 @@
             "properties": {
                 "addressSpace": {
                     "addressPrefixes": [
-                        "10.1.0.0/24"
+                        "[variables('SpokeCIDR')]"
                     ]
                 },
                 "subnets": [
                     {
                         "name": "[concat(resourcegroup().name,'Subnet1')]",
                         "properties": {
-                            "addressPrefix": "10.1.0.0/24"
+                            "addressPrefix": "[variables('SpokeCIDR')]"
                         }
                     }
                     
@@ -34,6 +36,7 @@
             "type": "Microsoft.Network/virtualNetworks/virtualNetworkPeerings",
             "apiVersion": "2019-11-01",
             "name": "[concat(resourcegroup().name,'-Hub-Peering')]",
+            "comments": "Spoke to Hub peering",
             "location": "[resourceGroup().location]",
             "properties": {
                 "allowVirtualNetworkAccess": true,
@@ -41,11 +44,11 @@
                 "allowGatewayTransit": false,
                 "useRemoteGateways": false,
                 "remoteVirtualNetwork": {
-                    "id": "HubVnet"
+                    "id": "[resourceId('Microsoft.Network/virtualNetworks/', 'HubVnet')]"
                 }
             },
             "dependsOn": [
-                        "[resourceId('Microsoft.Network/virtualNetworks/', 'Hub')]",
+                        "[resourceId('Microsoft.Network/virtualNetworks/', 'HubVnet')]",
                         "[resourceId('Microsoft.Network/virtualNetworks/', concat(resourcegroup().name,'Vnet'))]"
             ]
         }
