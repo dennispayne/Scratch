@@ -35,7 +35,7 @@
         {
             "type": "Microsoft.Resources/resourceGroups",
             "apiVersion": "2019-10-01",
-            "name": "[concat('Spoke',copyIndex(1))]",
+            "name": "[concat('Spoke-',copyIndex(1))]",
             "location": "[parameters('DeploymentLocation')]",
             "dependsOn":[
                 "Hub"
