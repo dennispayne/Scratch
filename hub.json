@@ -10,7 +10,7 @@
             "apiVersion": "2016-10-01",
             "location": "eastus",
             "tags": {
-                "displayName": "PCMainKeyVault"
+
             },
             "properties": {
                 "enabledForDeployment": true,
@@ -61,7 +61,7 @@
             "apiVersion": "2019-11-01",
             "location": "[resourceGroup().location]",
             "tags": {
-                "displayName": "HubVnet"
+                
             },
             "properties": {
                 "addressSpace": {
