@@ -1,1 +1,6 @@
-Get-AzResourceGroup | Where-Object {$_.ResourceGroupName -like "Hub" -or $_.ResourceGroupName -like "Spoke-*"} | Remove-AzResourceGroup -Force
+$RemovalScope = Get-AzResourceGroup | Where-Object {$_.ResourceGroupName -like "WVD-*"} 
+
+foreach ($RG in $RemovalScope) {
+    write-host "Removing $RG"
+    remove-azresourcegroup $RG
+}
