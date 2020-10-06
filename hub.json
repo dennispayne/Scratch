@@ -32,8 +32,7 @@
                     "name": "WVD-Hub-Vnet-To-WVD-Spoke-1-Vnet-Peering",
                     "location": "[resourceGroup().location]",
                     "dependsOn": [
-                        "[resourceId('Microsoft.Network/virtualNetworks', 'WVD-Hub-Vnet')]",
-                        "[resourceId('WVD-Spoke-1','Microsoft.Network/virtualNetworks','WVD-Spoke1-Vnet')]"
+                        "[resourceId('Microsoft.Network/virtualNetworks', 'WVD-Hub-Vnet')]"
                     ],
                     "comments": "This is the peering from Spoke to Hub",
                     "properties": {
