@@ -1,6 +1,6 @@
 $RemovalScope = Get-AzResourceGroup | Where-Object {$_.ResourceGroupName -like "WVD-*"} 
 
-foreach ($RG in $RemovalScope) {
-    write-host "Removing $RG"
-    remove-azresourcegroup $RG
+$RemovalScope | ForEach-Object {
+    Write-Host "Removing $RG"
+    Remove-AzResourceGroup $RG -Force
 }
