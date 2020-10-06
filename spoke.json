@@ -36,8 +36,7 @@
                     "name": "[concat(variables('SpokeVnetName'),'-Vnet-to-WVD-Hub-Vnet-Peering')]",
                     "location": "[resourceGroup().location]",
                     "dependsOn": [
-                        "[resourceId('Microsoft.Network/virtualNetworks', variables('SpokeVnetName'))]",
-                        "[resourceId('WVD-Hub','Microsoft.Network/virtualNetworks','WVD-Hub-Vnet')]"
+                        "[resourceId('Microsoft.Network/virtualNetworks', variables('SpokeVnetName'))]"
                     ],
                     "comments": "This is the peering from Spoke to Hub",
                     "properties": {
