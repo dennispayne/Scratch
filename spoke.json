@@ -4,6 +4,7 @@
     "parameters": {},
     "functions": [],
     "variables": {
+        "SpokeRGName": "[resourceGroup().name]",
         "SpokeNumber": "[split(resourceGroup().name,'-')[2]]",
         "SpokeCIDR": "[concat('10.',variables('SpokeNumber'),'.0.0/24')]",
         "SpokeVnetName": "[concat(resourcegroup().name,'-Vnet')]"
@@ -49,8 +50,43 @@
                         }
                     }    
                 }
-
             ]
+        },
+        {
+            "name": "DeployHubToSpokePeering",
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "2019-10-01",
+            "resourceGroup": "WVD-Hub",
+            "properties": {
+                "expressionEvaluationOptions": {
+                    "scope": "outer"
+                },
+                "mode": "Incremental",
+                "template": {
+                    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+                    "contentVersion": "1.0.0.0",
+                    "parameters": {},
+                    "variables": {},
+                    "resources": [
+                        {
+                            "apiVersion": "2020-05-01",
+                            "type": "Microsoft.Network/virtualNetworks/virtualNetworkPeerings",
+                            "name": "WVD-Hub-Vnet/LinkToBigNetA",
+                            "location": "[resourceGroup().location]",
+                            "properties": {
+                                "allowVirtualNetworkAccess": true,
+                                "allowForwardedTraffic": false,
+                                "allowGatewayTransit": false,
+                                "useRemoteGateways": false,
+                                "remoteVirtualNetwork": {
+                                    "id": "[resourceId(variables('SpokeRGName'),'Microsoft.Network/virtualNetworks', variables('SpokeVnetName'))]"  
+                                }
+                            }
+                        }
+                    ],
+                    "outputs": {}
+                }
+            }
         }
      ],
     "outputs": {}
