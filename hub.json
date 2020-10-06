@@ -5,6 +5,30 @@
     "functions": [],
     "variables": {},
     "resources": [
+        {
+            "name": "WVD-Hub-Vnet",
+            "type": "Microsoft.Network/virtualNetworks",
+            "apiVersion": "2019-11-01",
+            "location": "[resourceGroup().location]",
+            "properties": {
+                "addressSpace":{
+                    "addressPrefixes": [
+                        "10.0.0.0/24"
+                    ]
+                },
+                "subnets": [
+                    {
+                        "name": "WVD-Hub-Subnet-1",
+                        "properties": {
+                            "addressPrefix": "10.0.0.0/24"
+                        }
+                    }
+                ]
+            },
+            "resources":[
+
+            ]
+        },
         {   "name": "PCMainKeyVault",
             "type": "Microsoft.KeyVault/vaults",
             "apiVersion": "2016-10-01",
@@ -35,9 +59,6 @@
                     "family": "A"
                 }
             },
-            "dependsOn": [
-
-            ],
             "resources": [
                 {
                     "type": "secrets",
