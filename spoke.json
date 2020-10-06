@@ -4,11 +4,12 @@
     "parameters": {},
     "functions": [],
     "variables": {
-        "ThisSpokeNumber":"[split(resourceGroup().name,'-')[2]]",
-        "SpokeCIDR": "[concat('10.',variables('ThisSpokeNumber'),'.0.0/24')]"
+        "SpokeNumber": "[split(resourceGroup().name,'-')[2]]",
+        "SpokeCIDR": "[concat('10.',variables('SpokeNumber'),'.0.0/24')]",
+        "SpokeVnetName": "[concat(resourcegroup().name,'-Vnet')]"
     },
     "resources": [
-        {   "name": "[concat(resourcegroup().name,'-Vnet')]",
+        {   "name": "[variables('SpokeVnetName')]",
             "comments": "Vnet used by this Spoke",
             "type": "Microsoft.Network/virtualNetworks",
             "apiVersion": "2019-11-01",
@@ -21,7 +22,7 @@
                 },
                 "subnets": [
                     {
-                        "name": "[concat(resourcegroup().name,'-Subnet1')]",
+                        "name": "[concat(variables('SpokeVnetName'),'-Subnet1')]",
                         "properties": {
                             "addressPrefix": "[variables('SpokeCIDR')]"
                         }
@@ -33,10 +34,10 @@
                 {
                     "apiVersion": "2020-05-01",
                     "type": "virtualNetworkPeerings",
-                    "name": "[concat(resourcegroup().name,'-Vnet-to-WVD-Hub-Vnet-Peering')]",
+                    "name": "[concat(variables('SpokeVnetName'),'-Vnet-to-WVD-Hub-Vnet-Peering')]",
                     "location": "[resourceGroup().location]",
                     "dependsOn": [
-                        "[resourceId('Microsoft.Network/virtualNetworks', concat(resourcegroup().name,'-Vnet'))]",
+                        "[resourceId('Microsoft.Network/virtualNetworks', variables('SpokeVnetName'))]",
                         "[resourceId('WVD-Hub','Microsoft.Network/virtualNetworks','WVD-Hub-Vnet')]"
                     ],
                     "comments": "This is the peering from Spoke to Hub",
@@ -58,9 +59,6 @@
             "apiVersion": "2019-10-01",
             "name": "HubToSpokePeeringDeployment",
             "resourceGroup": "WVD-Hub",
-            "dependsOn": [
-                "[resourceId('Microsoft.Network/virtualNetworks', concat(resourcegroup().name,'-Vnet'))]"
-            ],
             "properties": {
                 "mode": "Incremental",
                 "template": {
@@ -68,7 +66,7 @@
                     "contentVersion": "1.0.0.0",
                     "resources":[
                         {
-                            "name": "[concat(resourcegroup().name,'-Vnet')]",
+                            "name": "WVD-Hub-Vnet",
                             "type": "Microsoft.Network/virtualNetworks",
                             "apiVersion": "2019-11-01",
                             "location": "[resourceGroup().location]",
@@ -83,11 +81,11 @@
                                 {
                                     "apiVersion": "2020-05-01",
                                     "type": "virtualNetworkPeerings",
-                                    "name": "[concat(resourcegroup().name,'-Vnet-to-WVD-Spoke-', variables('ThisSpokeNumber'),'-Vnet-Peering')]",
+                                    "name": "[concat('WVD-Hub-Vnet-to-', variables('SpokeVnetName'),'-Peering')]",
                                     "location": "[resourceGroup().location]",
                                     "dependsOn": [
-                                        "[resourceId('Microsoft.Network/virtualNetworks', concat(resourcegroup().name,'-Vnet'))]",
-                                        "[resourceId(concat('WVD-Spoke-', variables('ThisSpokeNumber')),'Microsoft.Network/virtualNetworks',concat('WVD-Spoke-', variables('ThisSpokeNumber'),'-Vnet'))]"
+                                        "[resourceId('Microsoft.Network/virtualNetworks', 'WVD-Hub-Vnet')]",
+                                        "[resourceId(concat('WVD-Spoke-', variables('SpokeNumber')),'Microsoft.Network/virtualNetworks',concat('WVD-Spoke-', variables('SpokeNumber'),'-Vnet'))]"
                                     ],
                                     "comments": "This is the peering from Hub to Spoke",
                                     "properties": {
@@ -96,7 +94,7 @@
                                         "allowGatewayTransit": false,
                                         "useRemoteGateways": false,
                                         "remoteVirtualNetwork": {
-                                            "id": "[resourceId(concat('WVD-Spoke-', variables('ThisSpokeNumber')),'Microsoft.Network/virtualNetworks',concat('WVD-Spoke-', variables('ThisSpokeNumber'),'-Vnet'))]"
+                                            "id": "[resourceId(concat('WVD-Spoke-', variables('SpokeNumber')),'Microsoft.Network/virtualNetworks',concat('WVD-Spoke-', variables('SpokeNumber'),'-Vnet'))]"
                                         }
                                     }    
                                 }
@@ -106,7 +104,6 @@
                 }
             }
         }
-        
     ],
     "outputs": {}
 }
