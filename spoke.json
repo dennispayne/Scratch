@@ -36,7 +36,8 @@
                     "name": "[concat(resourcegroup().name,'-Vnet-to-WVD-Hub-Vnet-Peering')]",
                     "location": "[resourceGroup().location]",
                     "dependsOn": [
-                        "[resourceId('Microsoft.Network/virtualNetworks', concat(resourcegroup().name,'-Vnet'))]"
+                        "[resourceId('Microsoft.Network/virtualNetworks', concat(resourcegroup().name,'-Vnet'))]",
+                        "[resourceId('WVD-Hub','Microsoft.Network/virtualNetworks','WVD-Hub-Vnet')]"
                     ],
                     "comments": "This is the peering from Spoke to Hub",
                     "properties": {
@@ -85,7 +86,8 @@
                                     "name": "[concat(resourcegroup().name,'-Vnet-to-WVD-Spoke-', variables('ThisSpokeNumber'),'-Vnet-Peering')]",
                                     "location": "[resourceGroup().location]",
                                     "dependsOn": [
-                                        "[resourceId('Microsoft.Network/virtualNetworks', concat(resourcegroup().name,'-Vnet'))]"
+                                        "[resourceId('Microsoft.Network/virtualNetworks', concat(resourcegroup().name,'-Vnet'))]",
+                                        "[resourceId(concat('WVD-Spoke-', variables('ThisSpokeNumber')),'Microsoft.Network/virtualNetworks',concat('WVD-Spoke-', variables('ThisSpokeNumber'),'-Vnet'))]"
                                     ],
                                     "comments": "This is the peering from Hub to Spoke",
                                     "properties": {
