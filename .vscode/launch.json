@@ -5,10 +5,18 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "PowerShell: Launch Script",
+            "name": "Run cleanup",
             "type": "PowerShell",
             "request": "launch",
-            "script": ".\\Deploy-AzTemplate.ps1",
+            "script": ".\\cleanup.ps1",
+            "cwd": "${workspaceFolder}"
+        },
+
+        {
+            "name": "Run deployment",
+            "type": "PowerShell",
+            "request": "launch",
+            "script": ".\\Deploy-AzTemplate.ps1 -UploadArtifacts",
             "cwd": "${workspaceFolder}"
         }
     ]

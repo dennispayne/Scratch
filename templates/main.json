@@ -75,71 +75,71 @@
                 "[resourceId('Microsoft.Resources/resourceGroups','WVD-Hub')]"
             ],
             "comments": "Linked deployment template containing all hub services. Executes once."
-        }
-        // {
-        //     "name": "[concat('DeploySpoke',copyIndex(1))]",
-        //     "type": "Microsoft.Resources/deployments",
-        //     "apiVersion": "2019-10-01",
-        //     "resourceGroup": "[concat('WVD-Spoke-',copyIndex(1))]",
-        //     "properties": {
-        //         "mode": "Incremental",
-        //         "templateLink": {
-        //             "uri": "[variables('spokeUri')]"
-        //         },
-        //         "parameters": {
-        //         }
-        //     },
-        //     "dependsOn":[
-        //         "[resourceId('Microsoft.Resources/resourceGroups' , concat('WVD-Spoke-',copyIndex(1)))]"
-        //     ],
-        //     "copy": {
-        //         "name":"SpokeTemplateLoop",
-        //         "mode": "Parallel",
-        //         "count": "[parameters('SpokeCount')]"
-        //     },
-        //     "comments": "Linked deployment template containing all spoke services. Executes once per Spoke RG"
-        // }
-        // {
-        //     "name": "DeployHubToSpokePeering",
-        //     "type": "Microsoft.Resources/deployments",
-        //     "apiVersion": "2019-10-01",
-        //     "resourceGroup": "WVD-Hub",
+        },
+        {
+            "name": "[concat('DeploySpoke',copyIndex(1))]",
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "2019-10-01",
+            "resourceGroup": "[concat('WVD-Spoke-',copyIndex(1))]",
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[variables('spokeUri')]"
+                },
+                "parameters": {
+                }
+            },
+            "dependsOn":[
+                "[resourceId('Microsoft.Resources/resourceGroups' , concat('WVD-Spoke-',copyIndex(1)))]"
+            ],
+            "copy": {
+                "name":"SpokeTemplateLoop",
+                "mode": "Parallel",
+                "count": "[parameters('SpokeCount')]"
+            },
+            "comments": "Linked deployment template containing all spoke services. Executes once per Spoke RG"
+        },
+        {
+            "name": "DeployHubToSpokePeering",
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "2019-10-01",
+            "resourceGroup": "WVD-Hub",
 
-        //     "properties": {
-        //         "expressionEvaluationOptions": {
-        //             "scope": "outer"
-        //         },
-        //         "mode": "Incremental",
-        //         "template": {
-        //             "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
-        //             "contentVersion": "1.0.0.0",
-        //             "parameters": {},
-        //             "variables": {},
-        //             "resources": [
-        //                 {
-        //                     "apiVersion": "2020-05-01",
-        //                     "type": "Microsoft.Network/virtualNetworks/virtualNetworkPeerings",
-        //                     "name": "WVD-Hub-Vnet/LinkToSpoke",
+            "properties": {
+                "expressionEvaluationOptions": {
+                    "scope": "outer"
+                },
+                "mode": "Incremental",
+                "template": {
+                    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+                    "contentVersion": "1.0.0.0",
+                    "parameters": {},
+                    "variables": {},
+                    "resources": [
+                        {
+                            "apiVersion": "2020-05-01",
+                            "type": "Microsoft.Network/virtualNetworks/virtualNetworkPeerings",
+                            "name": "WVD-Hub-Vnet/LinkToSpoke",
 
-        //                     "properties": {
-        //                         "allowVirtualNetworkAccess": true,
-        //                         "allowForwardedTraffic": false,
-        //                         "allowGatewayTransit": false,
-        //                         "useRemoteGateways": false,
-        //                         "remoteVirtualNetwork": {
-        //                             "id": "[resourceId(concat('WVD-Spoke-',copyIndex(1)),'Microsoft.Network/virtualNetworks', concat('WVD-Spoke-',copyIndex(1)))]"  
-        //                         }
-        //                     },
-        //                     "copy": {
-        //                         "name": "AddSpokesToPeering",
-        //                         "count": 5
-        //                     }
-        //                 }
-        //             ],
-        //             "outputs": {}
-        //         }
-        //     }
-        // }   
+                            "properties": {
+                                "allowVirtualNetworkAccess": true,
+                                "allowForwardedTraffic": false,
+                                "allowGatewayTransit": false,
+                                "useRemoteGateways": false,
+                                "remoteVirtualNetwork": {
+                                    "id": "[resourceId(concat('WVD-Spoke-',copyIndex('AddSpokesToHubPeering',1)),'Microsoft.Network/virtualNetworks', concat('WVD-Spoke-',copyIndex('AddSpokesToHubPeering',1)))]"  
+                                }
+                            },
+                            "copy": {
+                                "name": "AddSpokesToHubPeering",
+                                "count": "[parameters('SpokeCount')]"
+                            }
+                        }
+                    ],
+                    "outputs": {}
+                }
+            }
+        }   
     ],
     "outputs": {}
 }
