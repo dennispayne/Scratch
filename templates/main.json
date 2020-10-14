@@ -1,0 +1,145 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2018-05-01/subscriptionDeploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "SpokeCount": {
+            "type": "int",
+            "minValue": 1,
+            "defaultValue": 1
+        },
+        "DeploymentLocation": {
+            "type": "string",
+            "allowedValues": [
+                "eastus",
+                "westus"
+            ]
+        },
+        "_artifactsLocation": {
+            "type": "string",
+            "metadata": {
+                "description": "The base URI where artifacts required by this template are located including a trailing '/'"
+            },
+            "defaultValue": "[deployment().properties.templateLink.uri]"
+        },
+        "_artifactsLocationSasToken": {
+            "type": "securestring",
+            "metadata": {
+                "description": "The sasToken required to access _artifactsLocation. When the template is deployed using the accompanying scripts, a sasToken will be automatically generated. Use the defaultValue if the staging location is not secured."
+            },
+            "defaultValue": ""
+        }
+    },
+    "functions": [],
+    "variables": {
+        "hubUri": "[uri(parameters('_artifactsLocation'), concat('hub.json', parameters('_artifactsLocationSasToken')))]",
+        "spokeUri": "[uri(parameters('_artifactsLocation'), concat('spoke.json', parameters('_artifactsLocationSasToken')))]"
+    },
+    "resources": [
+        {
+            "type": "Microsoft.Resources/resourceGroups",
+            "apiVersion": "2019-10-01",
+            "name": "WVD-Hub",
+            "location": "[parameters('DeploymentLocation')]",
+            "comments": "Hub Resource Group that will be the centralized services (vnet, profile storage, etc) for all other services deployed by this template"
+        },
+        {
+            "type": "Microsoft.Resources/resourceGroups",
+            "apiVersion": "2019-10-01",
+            "name": "[concat('WVD-Spoke-',copyIndex(1))]",
+            "location": "[parameters('DeploymentLocation')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Resources/resourceGroups','WVD-Hub')]"
+            ],
+            "copy": {
+                "name": "SpokeRGLoop",
+                "mode": "Parallel",
+                "count": "[parameters('SpokeCount')]"
+            },
+            "comments": "One or more Spoke Resource Groups that will contain vnets peered with the Hub, WVD session pools, etc."
+
+        },
+        {
+            "name": "DeployHub",
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "2019-10-01",
+            "resourceGroup": "WVD-Hub",
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[variables('hubUri')]"
+                },
+                "parameters": {
+                }
+            },
+            "dependsOn": [
+                "[resourceId('Microsoft.Resources/resourceGroups','WVD-Hub')]"
+            ],
+            "comments": "Linked deployment template containing all hub services. Executes once."
+        }
+        // {
+        //     "name": "[concat('DeploySpoke',copyIndex(1))]",
+        //     "type": "Microsoft.Resources/deployments",
+        //     "apiVersion": "2019-10-01",
+        //     "resourceGroup": "[concat('WVD-Spoke-',copyIndex(1))]",
+        //     "properties": {
+        //         "mode": "Incremental",
+        //         "templateLink": {
+        //             "uri": "[variables('spokeUri')]"
+        //         },
+        //         "parameters": {
+        //         }
+        //     },
+        //     "dependsOn":[
+        //         "[resourceId('Microsoft.Resources/resourceGroups' , concat('WVD-Spoke-',copyIndex(1)))]"
+        //     ],
+        //     "copy": {
+        //         "name":"SpokeTemplateLoop",
+        //         "mode": "Parallel",
+        //         "count": "[parameters('SpokeCount')]"
+        //     },
+        //     "comments": "Linked deployment template containing all spoke services. Executes once per Spoke RG"
+        // }
+        // {
+        //     "name": "DeployHubToSpokePeering",
+        //     "type": "Microsoft.Resources/deployments",
+        //     "apiVersion": "2019-10-01",
+        //     "resourceGroup": "WVD-Hub",
+
+        //     "properties": {
+        //         "expressionEvaluationOptions": {
+        //             "scope": "outer"
+        //         },
+        //         "mode": "Incremental",
+        //         "template": {
+        //             "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+        //             "contentVersion": "1.0.0.0",
+        //             "parameters": {},
+        //             "variables": {},
+        //             "resources": [
+        //                 {
+        //                     "apiVersion": "2020-05-01",
+        //                     "type": "Microsoft.Network/virtualNetworks/virtualNetworkPeerings",
+        //                     "name": "WVD-Hub-Vnet/LinkToSpoke",
+
+        //                     "properties": {
+        //                         "allowVirtualNetworkAccess": true,
+        //                         "allowForwardedTraffic": false,
+        //                         "allowGatewayTransit": false,
+        //                         "useRemoteGateways": false,
+        //                         "remoteVirtualNetwork": {
+        //                             "id": "[resourceId(concat('WVD-Spoke-',copyIndex(1)),'Microsoft.Network/virtualNetworks', concat('WVD-Spoke-',copyIndex(1)))]"  
+        //                         }
+        //                     },
+        //                     "copy": {
+        //                         "name": "AddSpokesToPeering",
+        //                         "count": 5
+        //                     }
+        //                 }
+        //             ],
+        //             "outputs": {}
+        //         }
+        //     }
+        // }   
+    ],
+    "outputs": {}
+}

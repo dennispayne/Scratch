@@ -8,7 +8,7 @@
             "name": "PowerShell: Launch Script",
             "type": "PowerShell",
             "request": "launch",
-            "script": "New-AzDeployment -TemplateFile scratch.json -Location eastus",
+            "script": ".\\Deploy-AzTemplate.ps1",
             "cwd": "${workspaceFolder}"
         }
     ]
