@@ -124,7 +124,6 @@
                                         "input":{
                                             "remoteVirtualNetwork": {
                                                 "id": "[resourceId(
-                                                    '994f290d-1e8b-4abc-a7f0-ef9de9e0e623',
                                                     concat('WVD-Spoke-',copyIndex('HubToSpokePeering',1)),
                                                     'Microsoft.Network/virtualNetworks', 
                                                     concat('WVD-Spoke-',copyIndex('HubToSpokePeering',1)))
