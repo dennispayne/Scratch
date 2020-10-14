@@ -2,9 +2,13 @@
     "$schema": "https://schema.management.azure.com/schemas/2018-05-01/subscriptionDeploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
+        "HubSubscription": {
+            "type": "string"            
+        },
         "SpokeCount": {
             "type": "int",
             "minValue": 1,
+            "maxValue": 250,
             "defaultValue": 1
         },
         "DeploymentLocation": {
@@ -100,11 +104,13 @@
             "comments": "Linked deployment template containing all spoke services. Executes once per Spoke RG"
         },
         {
-            "name": "DeployHubToSpokePeering",
+            "name": "[concat('DeployHubToSpoke',copyIndex(1),'Peering')]",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "2019-10-01",
             "resourceGroup": "WVD-Hub",
-
+            "dependsOn": [
+                "SpokeTemplateLoop"
+            ],
             "properties": {
                 "expressionEvaluationOptions": {
                     "scope": "outer"
@@ -119,25 +125,25 @@
                         {
                             "apiVersion": "2020-05-01",
                             "type": "Microsoft.Network/virtualNetworks/virtualNetworkPeerings",
-                            "name": "WVD-Hub-Vnet/LinkToSpoke",
-
+                            "name": "[concat('WVD-Hub-Vnet/HubToSpoke',copyIndex(1))]",
                             "properties": {
                                 "allowVirtualNetworkAccess": true,
                                 "allowForwardedTraffic": false,
                                 "allowGatewayTransit": false,
                                 "useRemoteGateways": false,
                                 "remoteVirtualNetwork": {
-                                    "id": "[resourceId(concat('WVD-Spoke-',copyIndex('AddSpokesToHubPeering',1)),'Microsoft.Network/virtualNetworks', concat('WVD-Spoke-',copyIndex('AddSpokesToHubPeering',1)))]"  
+                                    "id": "[concat('/subscriptions/',parameters('HubSubscription'),'/resourceGroups/WVD-Spoke-',copyIndex(1),'/providers/Microsoft.Network/virtualNetworks/WVD-Spoke-',copyIndex(1),'-Vnet')]"  
                                 }
-                            },
-                            "copy": {
-                                "name": "AddSpokesToHubPeering",
-                                "count": "[parameters('SpokeCount')]"
                             }
                         }
                     ],
                     "outputs": {}
                 }
+            },
+            "copy": {
+                "name":"HubSpokePeeringLoop",
+                "mode": "Parallel",
+                "count": "[parameters('SpokeCount')]"
             }
         }   
     ],
