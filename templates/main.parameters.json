@@ -3,7 +3,7 @@
     "contentVersion": "1.0.0.0",
     "parameters": {
         "SpokeCount": {
-            "value": 5
+            "value": 20
         },
         "DeploymentLocation": {
             "value":"eastus"
