@@ -2,5 +2,5 @@ $RemovalScope = Get-AzResourceGroup | Where-Object {$_.ResourceGroupName -like "
 
 $RemovalScope | ForEach-Object {
     Write-Host "Removing $($_.ResourceGroupName)"
-    $_ | Remove-AzResourceGroup -Force
+    $_ | Remove-AzResourceGroup -Force -AsJob
 }

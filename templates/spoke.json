@@ -33,10 +33,10 @@
                 {
                     "apiVersion": "2020-05-01",
                     "type": "virtualNetworkPeerings",
-                    "name": "[concat(variables('SpokeVnetName'),'-to-WVD-Hub-Vnet-Peering')]",
+                    "name": "[concat(variables('SpokeVnetName'),'ToWVDHubPeering')]",
                     "location": "[resourceGroup().location]",
                     "dependsOn": [
-                        "[resourceId('Microsoft.Network/virtualNetworks', variables('SpokeVnetName'))]"
+                        "[variables('SpokeVnetName')]"
                     ],
                     "comments": "This is the peering from Spoke to Hub",
                     "properties": {
