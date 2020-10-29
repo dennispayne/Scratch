@@ -5,22 +5,25 @@
     "functions": [],
     "variables": {},
     "resources": [
-        {
-            "name": "WVD-Hub-Vnet",
+        {   "name": "WVD-Hub-Vnet",
             "type": "Microsoft.Network/virtualNetworks",
             "apiVersion": "2019-11-01",
             "location": "[resourceGroup().location]",
             "properties": {
                 "addressSpace":{
                     "addressPrefixes": [
-                        "10.0.0.0/24"
+                        "10.0.0.0/23"
                     ]
                 },
                 "subnets": [
-                    {
-                        "name": "WVD-Hub-Subnet-1",
+                    {"name": "WVD-Hub-Subnet-1",
                         "properties": {
                             "addressPrefix": "10.0.0.0/24"
+                        }
+                    },
+                    {"name": "WVDAADDS",
+                        "properties": {
+                            "addressPrefix": "10.0.1.0/24"
                         }
                     }
                 ]
@@ -72,7 +75,24 @@
                     }
                 }
             ]
-        }
+        }//,
+        // {   "name": "WVD-AAD-DS",
+        //     "apiVersion": "2020-01-01",
+        //     "type": "Microsoft.AAD/DomainServices",
+        //     "location": "[resourceGroup().location]",
+        //     "dependsOn": [
+        //         "[resourceId('Microsoft.Network/virtualNetworks', 'WVD-Hub-Vnet')]"
+        //     ],
+        //     "properties": {
+        //         "domainName": "payne.cloud",
+        //         "replicaSets": [
+        //         {
+        //             "subnetId": "[resourceId('Microsoft.Network/virtualNetworks/subnets','WVD-Hub-Vnet','WVDAADDS')]",
+        //             "location": "[resourceGroup().location]"
+        //         }
+        //         ]
+        //     }
+        // }
     ],
     "outputs": {}
 }

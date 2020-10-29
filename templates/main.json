@@ -142,7 +142,7 @@
             },
             "copy": {
                 "name":"HubSpokePeeringLoop",
-                "mode": "Parallel",
+                "mode": "Serial",
                 "count": "[parameters('SpokeCount')]"
             }
         }   
